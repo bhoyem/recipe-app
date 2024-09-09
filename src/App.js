@@ -1,19 +1,22 @@
-import { useState, useEffect  } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
 import Header from "./components/Header";
 import RecipeExcerpt from "./components/RecipeExcerpt";
+import RecipeFull from "./components/RecipeFull";
 import { Loader } from "react-feather";
 import "./App.css";
+import { render } from "@testing-library/react";
 
 function App() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
 
   const fetchAllRecipes = async () => {
     try {
       setLoading(true);
       const response = await fetch("/api/recipes");
-      if (response.ok){
+      if (response.ok) {
         const results = await response.json();
         setRecipes(results);
       } else {
@@ -27,17 +30,26 @@ function App() {
 
   useEffect(() => { fetchAllRecipes(); }, []);
 
+  const handleSelectRecipe = (recipe) => {
+    setSelectedRecipe(recipe);
+  };
+
+  const handleUnselectRecipe = () => {
+    setSelectedRecipe(null);
+  };
+
   return (
     <div className='recipe-app'>
       <Header />
-      {/* <p>Your recipes here! </p> */}
-      <div className="recipe-list">
-        {recipes.map(recipe => (
-          <RecipeExcerpt key={recipe.id} recipe={recipe}/>
-        ))}
-        {/* {JSON.stringify(recipes)}; */}
-        {/* {loading ? (<Loader />) : ({{JSON.stringify(recipes)}})}; */}
-      </div>
+      {selectedRecipe ? (
+        <RecipeFull selectedRecipe={selectedRecipe} handleUnselectRecipe={handleUnselectRecipe} />
+      ) :
+        (<div className="recipe-list">
+          {recipes.map(recipe => (
+            <RecipeExcerpt key={recipe.id} recipe={recipe} handleSelectRecipe={handleSelectRecipe} />
+          ))}
+
+        </div>)}
     </div>
   );
 }
