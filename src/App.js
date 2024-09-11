@@ -108,6 +108,25 @@ function App() {
     setSelectedRecipe(null);
   };
 
+  const handleDeleteRecipe = async (recipeId) => {
+
+    try {
+      const response = await fetch(`/api/recipes/${recipeId}`, {
+        method: "DELETE"
+      });
+
+      if (response.ok) {
+        setRecipes(recipes.filter((recipe) => recipe.id !== recipeId))
+        console.log("Recipe deleted successfully.");
+      } else {
+        console.error("Something went wrong in deleting the recipe")
+      }
+    } catch (error) {
+      console.error("Error in deleting", error);
+    }
+    setSelectedRecipe(null);
+  }
+
 
 
   const handleSelectRecipe = (recipe) => {
@@ -141,13 +160,13 @@ function App() {
       <Header showRecipeForm={showRecipeForm} />
       {showNewRecipeForm && (
         <NewRecipeForm newRecipe={newRecipe} hideRecipeForm={hideRecipeForm} onUpdateForm={onUpdateForm} handleNewRecipe={handleNewRecipe} />
-      )};
+      )}
       {selectedRecipe ? (
-        <RecipeFull selectedRecipe={selectedRecipe} handleUnselectRecipe={handleUnselectRecipe} onUpdateForm={onUpdateForm} handleUpdateRecipe={handleUpdateRecipe} />
+        <RecipeFull selectedRecipe={selectedRecipe} handleUnselectRecipe={handleUnselectRecipe} onUpdateForm={onUpdateForm} handleUpdateRecipe={handleUpdateRecipe} handleDeleteRecipe={handleDeleteRecipe}/>
       ) :
         (<div className="recipe-list">
           {recipes.map(recipe => (<RecipeExcerpt key={recipe.id} recipe={recipe} handleSelectRecipe={handleSelectRecipe} />))}
-        </div>)};
+        </div>)}
 
     </div>
   );

@@ -1,20 +1,32 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { X } from 'react-feather';
 import EditRecipeForm from './EditRecipeForm';
+import ConfirmationModal from './ConfirmationModal';
 
-const RecipeFull = ({ selectedRecipe, handleUnselectRecipe, onUpdateForm, handleUpdateRecipe }) => {
-    const[editing, setEditing] = useState(false);
+const RecipeFull = ({ selectedRecipe, handleUnselectRecipe, onUpdateForm, handleUpdateRecipe, handleDeleteRecipe }) => {
+    const [editing, setEditing] = useState(false);
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
     const handleCancel = () => {
         setEditing(false);
     }
 
+    if (showConfirmationModal) {
+        return (
+            <div className="recipe-details">
+                <ConfirmationModal
+                    message="Are you sure? Once it's gone, it's gone."
+                    onCancel={() => setShowConfirmationModal(false)}
+                    onConfirm={() => handleDeleteRecipe(selectedRecipe.id)}
+                />
+            </div>
+        );
+    }
+
     return (
         <div className='recipe-details'>
-            {console.log(editing)}
             {/* If the edit button is clicked, the editing state is set to true and launches the EditRecipeForm page otherwise the full recipe page is displayed. */}
-            {editing ? (<EditRecipeForm selectedRecipe={selectedRecipe} handleCancel={handleCancel} onUpdateForm={onUpdateForm} handleUpdateRecipe={handleUpdateRecipe}/>) : (
+            {editing ? (<EditRecipeForm selectedRecipe={selectedRecipe} handleCancel={handleCancel} onUpdateForm={onUpdateForm} handleUpdateRecipe={handleUpdateRecipe} />) : (
                 <article>
                     <header>
                         <figure>
@@ -26,7 +38,7 @@ const RecipeFull = ({ selectedRecipe, handleUnselectRecipe, onUpdateForm, handle
                             <button className='cancel-button' onClick={handleUnselectRecipe}>
                                 <X />Close
                             </button>
-                            <button className='delete-button'>Delete</button>
+                            <button className='delete-button' onClick={() => setShowConfirmationModal(true)}>Delete</button>
                         </div>
                     </header>
 
