@@ -50,7 +50,7 @@ function App() {
         body: JSON.stringify(newRecipe)
       });
 
-      if (response.ok){
+      if (response.ok) {
         const data = await response.json();
 
         setRecipes([...recipes, data.recipe])
@@ -70,10 +70,45 @@ function App() {
       } else {
         console.error("Oops - could not add recipe!")
       }
-    } catch (e) {
-      console.log("Error occured during the requets: ", e)
+    } catch (error) {
+      console.error("Error occured during the request: ", e)
     }
-  }
+  };
+
+  const handleUpdateRecipe = async (e, selectedRecipe) => {
+    e.preventDefault();
+    const { id } = selectedRecipe;
+
+    try {
+      const response = await fetch(`/api/recipes/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(selectedRecipe)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        setRecipes(
+          recipes.map((recipe) => {
+            if (recipe.id == id) {
+              return data.recipe;
+            }
+            return recipe;
+          }))
+
+        console.log("Recipe updated");
+      } else {
+        console.error("Error updating recipe");
+      }
+      setSelectedRecipe(null)
+    } catch (error) {
+      console.error("Error occured during the request: ", e);
+    }
+    setSelectedRecipe(null);
+  };
+
+
 
   const handleSelectRecipe = (recipe) => {
     setSelectedRecipe(recipe);
@@ -90,10 +125,16 @@ function App() {
     setSelectedRecipe(null);
   };
 
-  const onUpdateForm = (e) => {
+  /* This is the function that saves the entered values of each field. It is called from each field in the other components such as EditRecipeForm and NewRecipeForm*/
+  const onUpdateForm = (e, action = "new") => {
     const { name, value } = e.target;
-    setNewRecipe({ ...newRecipe, [name]: value });
+    if (action == "update") {
+      setSelectedRecipe({ ...selectedRecipe, [name]: value });
+    } else if (action == "new") {
+      setNewRecipe({ ...newRecipe, [name]: value });
+    }
   };
+
 
   return (
     <div className='recipe-app'>
@@ -102,7 +143,7 @@ function App() {
         <NewRecipeForm newRecipe={newRecipe} hideRecipeForm={hideRecipeForm} onUpdateForm={onUpdateForm} handleNewRecipe={handleNewRecipe} />
       )};
       {selectedRecipe ? (
-        <RecipeFull selectedRecipe={selectedRecipe} handleUnselectRecipe={handleUnselectRecipe} />
+        <RecipeFull selectedRecipe={selectedRecipe} handleUnselectRecipe={handleUnselectRecipe} onUpdateForm={onUpdateForm} handleUpdateRecipe={handleUpdateRecipe} />
       ) :
         (<div className="recipe-list">
           {recipes.map(recipe => (<RecipeExcerpt key={recipe.id} recipe={recipe} handleSelectRecipe={handleSelectRecipe} />))}
