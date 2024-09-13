@@ -7,6 +7,9 @@ import NewRecipeForm from "./components/NewRecipeForm";
 import { Loader } from "react-feather";
 import "./App.css";
 import { render } from "@testing-library/react";
+import displayToast from "./helpers/toastHelper.js";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [recipes, setRecipes] = useState([]);
@@ -27,6 +30,10 @@ function App() {
     setSearchTerm(text);
   }
 
+  const clearSearchTerm = () => {
+    setSearchTerm("");
+  }
+
   const handleSearch = () => {
     const searchResults = recipes.filter((recipe) => {
       const valuesToSearch = [recipe.title, recipe.ingredients, recipe.description];
@@ -44,10 +51,10 @@ function App() {
         const results = await response.json();
         setRecipes(results);
       } else {
-        console.log("Could not fetch recipes")
+        displayToast("Could not fetch recipes", "success")
       }
     } catch (e) {
-      console.error(`There was an error in fetching the recipes`, e)
+      displayToast(`There was an error in fetching the recipes`, "error")
     };
     setLoading(false);
   };
@@ -69,7 +76,7 @@ function App() {
 
         setRecipes([...recipes, data.recipe])
 
-        console.log("Recipe added");
+        displayToast("Recipe added", "success");
 
         setShowNewRecipeForm(false);
         setNewRecipe({
@@ -82,10 +89,10 @@ function App() {
         })
 
       } else {
-        console.error("Oops - could not add recipe!")
+        displayToast("Oops - could not add recipe!", "error")
       }
     } catch (error) {
-      console.error("Error occured during the request: ", e)
+      displayToast("Error occured during the request: ", "error")
     }
   };
 
@@ -111,13 +118,13 @@ function App() {
             return recipe;
           }))
 
-        console.log("Recipe updated");
+        displayToast("Recipe updated", "success");
       } else {
-        console.error("Error updating recipe");
+        displayToast("Error updating recipe", "error");
       }
       setSelectedRecipe(null)
     } catch (error) {
-      console.error("Error occured during the request: ", e);
+      displayToast("Error occured during the request: ", "error");
     }
     setSelectedRecipe(null);
   };
@@ -131,12 +138,12 @@ function App() {
 
       if (response.ok) {
         setRecipes(recipes.filter((recipe) => recipe.id !== recipeId))
-        console.log("Recipe deleted successfully.");
+        displayToast("Recipe deleted successfully.", "success");
       } else {
-        console.error("Something went wrong in deleting the recipe")
+        displayToast("Something went wrong in deleting the recipe", "error")
       }
     } catch (error) {
-      console.error("Error in deleting", error);
+      displayToast("Error in deleting", "error");
     }
     setSelectedRecipe(null);
   }
@@ -168,11 +175,18 @@ function App() {
     }
   };
 
+  const displayAllRecipes = () => {
+    setSelectedRecipe(null);
+    hideRecipeForm();
+    clearSearchTerm();
+
+  };
+
   const displayedRecipes = searchTerm ? handleSearch() : recipes
 
   return (
     <div className='recipe-app'>
-      <Header showRecipeForm={showRecipeForm} searchTerm={searchTerm} updateSearchTerm={updateSearchTerm} />
+      <Header showRecipeForm={showRecipeForm} searchTerm={searchTerm} updateSearchTerm={updateSearchTerm} displayAllRecipes={displayAllRecipes} hideRecipeForm={hideRecipeForm} clearSearchTerm={clearSearchTerm}/>
       {showNewRecipeForm && (
         <NewRecipeForm newRecipe={newRecipe} hideRecipeForm={hideRecipeForm} onUpdateForm={onUpdateForm} handleNewRecipe={handleNewRecipe} />
       )}
@@ -182,8 +196,9 @@ function App() {
         (<div className="recipe-list">
           {displayedRecipes.map(recipe => (<RecipeExcerpt key={recipe.id} recipe={recipe} handleSelectRecipe={handleSelectRecipe} />))}
         </div>)}
-
+          <ToastContainer />
     </div>
+  
   );
 }
 
