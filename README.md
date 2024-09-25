@@ -4,7 +4,7 @@ This project uses Create-React-App, Flask and SQLite.
 
 ## Available Scripts
 
-You will need to be running two scrips in two separate terminal tabs / windows.
+You will need to be running two scripts in two separate terminal tabs / windows.
 
 One will be for for running the Flask server, and the other for the React server.
 
