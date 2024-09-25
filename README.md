@@ -16,11 +16,23 @@ One will be for for running the Flask server, and the other for the React server
 
 First, make sure you drop into the `/api` directory, create and then run a virtual environment:
 
-`python -m venv venv && source venv/bin/activate`
+For Mac:
+`python3 -m venv venv && source venv/bin/activate`
 
-(For future sessions, only `source venv/bin/activate` will be needed to start the virtual environment. I recommend aliasing this command!)
+For Windows:
+`python -m venv venv && source venv/Scripts/activate`
 
-Then install all dependencies `pip install -r requirements.txt` (only the first time)
+
+(For future sessions, only `source venv/bin/activate` or `source venv/Scripts/activate` respectively will be needed to start the virtual environment. I recommend aliasing this command!)
+
+Then install all dependencies (only the first time):
+
+For Mac:
+`pip3 install -r requirements.txt` 
+
+For Windows:
+`pip install -r requirements.txt`
+
 
 ### For React
 
