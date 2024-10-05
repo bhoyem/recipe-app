@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 
 export const truncateText = (text, numWords = 20) => {
     const textArray = text.split(" ");

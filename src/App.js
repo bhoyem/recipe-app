@@ -4,16 +4,16 @@ import Header from "./components/Header";
 import RecipeExcerpt from "./components/RecipeExcerpt";
 import RecipeFull from "./components/RecipeFull";
 import NewRecipeForm from "./components/NewRecipeForm";
-import { Loader } from "react-feather";
+// import { Loader } from "react-feather";
 import "./App.css";
-import { render } from "@testing-library/react";
+// import { render } from "@testing-library/react";
 import displayToast from "./helpers/toastHelper.js";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [recipes, setRecipes] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [newRecipe, setNewRecipe] = useState({
     title: "",
@@ -112,7 +112,7 @@ function App() {
 
         setRecipes(
           recipes.map((recipe) => {
-            if (recipe.id == id) {
+            if (recipe.id === id) {
               return data.recipe;
             }
             return recipe;
@@ -168,9 +168,9 @@ function App() {
   /* This is the function that saves the entered values of each field. It is called from each field in the other components such as EditRecipeForm and NewRecipeForm*/
   const onUpdateForm = (e, action = "new") => {
     const { name, value } = e.target;
-    if (action == "update") {
+    if (action === "update") {
       setSelectedRecipe({ ...selectedRecipe, [name]: value });
-    } else if (action == "new") {
+    } else if (action === "new") {
       setNewRecipe({ ...newRecipe, [name]: value });
     }
   };
