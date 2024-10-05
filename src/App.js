@@ -45,7 +45,7 @@ function App() {
 
   const fetchAllRecipes = async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const response = await fetch("/api/recipes");
       if (response.ok) {
         const results = await response.json();
@@ -56,7 +56,7 @@ function App() {
     } catch (e) {
       displayToast(`There was an error in fetching the recipes`, "error")
     };
-    setLoading(false);
+    // setLoading(false);
   };
 
   useEffect(() => { fetchAllRecipes(); }, []);
