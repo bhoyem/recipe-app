@@ -1,4 +1,4 @@
-# Getting Started with your Flask / React project
+# Getting Started 
 
 This project uses Create-React-App, Flask and SQLite.
 
